@@ -76,7 +76,7 @@ class SgPreferencesFragment : PreferenceFragmentCompat(),
 
     private fun setupRootSettings() {
         // Clear image cache
-        findPreference<Preference>(KEY_CLEAR_CACHE).setOnPreferenceClickListener {
+        findPreference<Preference>(KEY_CLEAR_CACHE)!!.setOnPreferenceClickListener {
             // try to open app info where user can clear app cache folders
             var intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             intent.data = Uri.parse("package:" + activity!!.packageName)
@@ -90,19 +90,19 @@ class SgPreferencesFragment : PreferenceFragmentCompat(),
         }
 
         // display version as About summary
-        findPreference<Preference>(KEY_ABOUT).summary = Utils.getVersionString(activity)
+        findPreference<Preference>(KEY_ABOUT)!!.summary = Utils.getVersionString(activity)
     }
 
     private fun updateRootSettings() {
         val hasAccessToX = Utils.hasAccessToX(activity)
 
         // unlock all link
-        findPreference<Preference>(LINK_KEY_UPGRADE).apply {
+        findPreference<Preference>(LINK_KEY_UPGRADE)!!.apply {
             summary = if (hasAccessToX) getString(R.string.upgrade_success) else null
         }
 
         // notifications link
-        findPreference<Preference>(KEY_SCREEN_NOTIFICATIONS).apply {
+        findPreference<Preference>(KEY_SCREEN_NOTIFICATIONS)!!.apply {
             if (hasAccessToX && NotificationSettings.isNotificationsEnabled(activity)) {
                 summary = NotificationSettings.getLatestToIncludeTresholdValue(activity)
             } else {
@@ -111,7 +111,7 @@ class SgPreferencesFragment : PreferenceFragmentCompat(),
         }
 
         // SeriesGuide Cloud link
-        findPreference<Preference>(LINK_KEY_CLOUD).apply {
+        findPreference<Preference>(LINK_KEY_CLOUD)!!.apply {
             if (hasAccessToX && HexagonSettings.isEnabled(activity)) {
                 summary = HexagonSettings.getAccountName(activity)
             } else {
@@ -120,7 +120,7 @@ class SgPreferencesFragment : PreferenceFragmentCompat(),
         }
 
         // trakt link
-        findPreference<Preference>(LINK_KEY_TRAKT).apply {
+        findPreference<Preference>(LINK_KEY_TRAKT)!!.apply {
             if (TraktCredentials.get(activity).hasCredentials()) {
                 summary = TraktCredentials.get(activity).username
             } else {
@@ -129,7 +129,7 @@ class SgPreferencesFragment : PreferenceFragmentCompat(),
         }
 
         // Theme switcher
-        findPreference<ListPreference>(DisplaySettings.KEY_THEME).apply {
+        findPreference<ListPreference>(DisplaySettings.KEY_THEME)!!.apply {
             if (hasAccessToX) {
                 setOnPreferenceChangeListener { preference, newValue ->
                     if (DisplaySettings.KEY_THEME == preference.key) {
@@ -155,14 +155,14 @@ class SgPreferencesFragment : PreferenceFragmentCompat(),
         setListPreferenceSummary(findPreference(DisplaySettings.KEY_NUMBERFORMAT))
 
         // set current value of auto-update pref
-        findPreference<SwitchPreferenceCompat>(UpdateSettings.KEY_AUTOUPDATE).isChecked =
+        findPreference<SwitchPreferenceCompat>(UpdateSettings.KEY_AUTOUPDATE)!!.isChecked =
             SgSyncAdapter.isSyncAutomatically(activity)
     }
 
     private fun setupNotificationSettings() {
-        val enabledPref: SwitchPreferenceCompat = findPreference(NotificationSettings.KEY_ENABLED)
-        val thresholdPref: Preference = findPreference(NotificationSettings.KEY_THRESHOLD)
-        val selectionPref: Preference = findPreference(NotificationSettings.KEY_SELECTION)
+        val enabledPref: SwitchPreferenceCompat = findPreference(NotificationSettings.KEY_ENABLED)!!
+        val thresholdPref: Preference = findPreference(NotificationSettings.KEY_THRESHOLD)!!
+        val selectionPref: Preference = findPreference(NotificationSettings.KEY_SELECTION)!!
         // only visible pre-O
         val vibratePref: Preference? = findPreference(NotificationSettings.KEY_VIBRATE)
         val ringtonePref: Preference? = findPreference(NotificationSettings.KEY_RINGTONE)
@@ -217,16 +217,14 @@ class SgPreferencesFragment : PreferenceFragmentCompat(),
     }
 
     private fun updateNotificationSettings() {
-        updateSelectionSummary(findPreference(NotificationSettings.KEY_SELECTION))
+        updateSelectionSummary(findPreference(NotificationSettings.KEY_SELECTION)!!)
     }
 
     private fun setupBasicSettings() {
         // show currently set values for some prefs
-        updateStreamSearchServiceSummary(findPreference(StreamingSearch.KEY_SETTING_SERVICE))
-        setListPreferenceSummary(
-            findPreference(DisplaySettings.KEY_LANGUAGE_FALLBACK) as ListPreference
-        )
-        updateTimeOffsetSummary(findPreference(DisplaySettings.KEY_SHOWS_TIME_OFFSET))
+        updateStreamSearchServiceSummary(findPreference(StreamingSearch.KEY_SETTING_SERVICE)!!)
+        setListPreferenceSummary(findPreference(DisplaySettings.KEY_LANGUAGE_FALLBACK))
+        updateTimeOffsetSummary(findPreference(DisplaySettings.KEY_SHOWS_TIME_OFFSET)!!)
     }
 
     override fun onStart() {
