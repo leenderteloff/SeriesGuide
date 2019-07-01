@@ -100,7 +100,7 @@ public class MovieLocalizationDialogFragment extends AppCompatDialogFragment {
                 Collections.sort(items,
                         (left, right) -> collator.compare(left.displayText, right.displayText));
                 EventBus.getDefault().postSticky(new ItemsLoadedEvent(items, 0));
-            }).run();
+            }).start();
         });
         buttonRegion.setOnClickListener(v -> {
             setListVisible(true);
@@ -118,7 +118,7 @@ public class MovieLocalizationDialogFragment extends AppCompatDialogFragment {
                 Collections.sort(items,
                         (left, right) -> collator.compare(left.displayText, right.displayText));
                 EventBus.getDefault().postSticky(new ItemsLoadedEvent(items, 1));
-            }).run();
+            }).start();
         });
 
         return view;

@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 import com.battlelancer.seriesguide.R;
@@ -250,24 +251,23 @@ public class JsonExportTask extends AsyncTask<Void, Integer, Integer> {
                 if (backupFileUri == null) {
                     return ERROR_FILE_ACCESS;
                 }
+                try (ParcelFileDescriptor pfd = context.getContentResolver()
+                        .openFileDescriptor(backupFileUri, "w")) {
+                    FileOutputStream out = new FileOutputStream(pfd.getFileDescriptor());
 
-                ParcelFileDescriptor pfd = context.getContentResolver()
-                        .openFileDescriptor(backupFileUri, "w");
-                if (pfd == null) {
-                    return ERROR_FILE_ACCESS;
+
+                    if (type == BACKUP_SHOWS) {
+                        writeJsonStreamShows(out, data);
+                    } else if (type == BACKUP_LISTS) {
+                        writeJsonStreamLists(out, data);
+                    } else if (type == BACKUP_MOVIES) {
+                        writeJsonStreamMovies(out, data);
+                    }
+                    // let the document provider know we're done.
+                    out.close();
+                } catch (FileNotFoundException e) {
+                    Log.e("Exception", e.toString());
                 }
-                FileOutputStream out = new FileOutputStream(pfd.getFileDescriptor());
-
-                if (type == BACKUP_SHOWS) {
-                    writeJsonStreamShows(out, data);
-                } else if (type == BACKUP_LISTS) {
-                    writeJsonStreamLists(out, data);
-                } else if (type == BACKUP_MOVIES) {
-                    writeJsonStreamMovies(out, data);
-                }
-
-                // let the document provider know we're done.
-                pfd.close();
             } else {
                 File backupFile;
                 if (type == BACKUP_SHOWS) {

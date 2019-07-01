@@ -258,7 +258,6 @@ public class ShowsFragment extends Fragment {
             }
             case DISMISS: {
                 adapter.setDisplayFirstRunHeader(false);
-                model.reRunQuery();
                 break;
             }
         }
@@ -291,7 +290,7 @@ public class ShowsFragment extends Fragment {
     private Runnable dataRefreshRunnable = new Runnable() {
         @Override
         public void run() {
-            model.reRunQuery();
+
         }
     };
 

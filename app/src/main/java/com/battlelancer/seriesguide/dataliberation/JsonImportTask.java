@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.annotation.Nullable;
 import com.battlelancer.seriesguide.R;
 import com.battlelancer.seriesguide.dataliberation.JsonExportTask.ListItemTypesExport;
@@ -37,7 +38,6 @@ import com.google.gson.stream.JsonReader;
 import com.uwetrottmann.androidutils.AndroidUtils;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -107,16 +107,17 @@ public class JsonImportTask extends AsyncTask<Void, Integer, Integer> {
             return ERROR;
         }
 
-        int result;
-        if (isImportShows) {
-            result = importData(importPath, JsonExportTask.BACKUP_SHOWS);
-            if (result != SUCCESS) {
-                return result;
+        try {
+            int result;
+            if (isImportShows) {
+                result = importData(importPath, JsonExportTask.BACKUP_SHOWS);
+                if (result != SUCCESS) {
+                    return result;
+                }
+                if (isCancelled()) {
+                    return ERROR;
+                }
             }
-            if (isCancelled()) {
-                return ERROR;
-            }
-        }
 
         if (isImportLists) {
             result = importData(importPath, JsonExportTask.BACKUP_LISTS);
@@ -128,6 +129,7 @@ public class JsonImportTask extends AsyncTask<Void, Integer, Integer> {
             }
         }
 
+
         if (isImportMovies) {
             result = importData(importPath, JsonExportTask.BACKUP_MOVIES);
             if (result != SUCCESS) {
@@ -136,6 +138,9 @@ public class JsonImportTask extends AsyncTask<Void, Integer, Integer> {
             if (isCancelled()) {
                 return ERROR;
             }
+        }
+        } catch (IOException  e) {
+            Log.e("Exception", e.toString());
         }
 
         // Renew search table
@@ -175,7 +180,8 @@ public class JsonImportTask extends AsyncTask<Void, Integer, Integer> {
                         context.getString(messageId), errorCause, showIndefinite));
     }
 
-    private int importData(File importPath, @JsonExportTask.BackupType int type) {
+    private int importData(File importPath, @JsonExportTask.BackupType int type)
+            throws IOException {
         // if using default files or non-user custom files the backup task will not create a file
         // if there is no data to export,
         // so make sure to not fail just because a default folder file is missing
@@ -186,18 +192,7 @@ public class JsonImportTask extends AsyncTask<Void, Integer, Integer> {
                 return ERROR_FILE_ACCESS;
             }
             // ...and the file actually exists
-            ParcelFileDescriptor pfd;
-            try {
-                pfd = context.getContentResolver().openFileDescriptor(backupFileUri, "r");
-            } catch (FileNotFoundException | SecurityException e) {
-                Timber.e(e, "Backup file not found.");
-                errorCause = e.getMessage();
-                return ERROR_FILE_ACCESS;
-            }
-            if (pfd == null) {
-                Timber.e("File descriptor is null.");
-                return ERROR_FILE_ACCESS;
-            }
+            try (ParcelFileDescriptor  pfd = context.getContentResolver().openFileDescriptor(backupFileUri, "r")) {
 
             if (!clearExistingData(type)) {
                 return ERROR;
@@ -205,12 +200,10 @@ public class JsonImportTask extends AsyncTask<Void, Integer, Integer> {
 
             // Access JSON from backup file and try to import data
             FileInputStream in = new FileInputStream(pfd.getFileDescriptor());
-            try {
                 importFromJson(type, in);
 
                 // let the document provider know we're done.
-                pfd.close();
-            } catch (JsonParseException | IOException | IllegalStateException e) {
+            } catch (Exception e) {
                 // the given Json might not be valid or unreadable
                 Timber.e(e, "JSON import failed");
                 errorCause = e.getMessage();
@@ -234,21 +227,13 @@ public class JsonImportTask extends AsyncTask<Void, Integer, Integer> {
                 return SUCCESS;
             }
 
-            FileInputStream in;
-            try {
-                in = new FileInputStream(backupFile);
-            } catch (FileNotFoundException e) {
-                Timber.e(e, "Backup file not found.");
-                errorCause = e.getMessage();
-                return ERROR_FILE_ACCESS;
-            }
 
+            try (FileInputStream in = new FileInputStream( backupFile)) {
             if (!clearExistingData(type)) {
                 return ERROR;
             }
 
             // Access JSON from backup file and try to import data
-            try {
                 importFromJson(type, in);
             } catch (JsonParseException | IOException | IllegalStateException e) {
                 // the given Json might not be valid or unreadable
