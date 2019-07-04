@@ -1,9 +1,11 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.cloud.tools.endpoints-framework-client'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.cloud.tools.endpoints-framework-client'
 apply plugin: 'io.fabric'
 apply plugin: 'org.sonarqube'
+
+
 buildscript {
     ext {
         springBootVersion = '1.5.4.RELEASE'
@@ -25,16 +27,16 @@ sonarqube {
         property "sonar.sources","src/main/java"
         property "sonar.language","java"
         property "sonar.sourceEncoding", "UTF-8"
+
 //        property "sonar.exclusions", "src/main/java/com/foo/Foo.java"
     }
 }
-
-
 
 android {
     compileSdkVersion versions.compileSdk
 
     useLibrary 'android.test.base'
+
 
     defaultConfig {
         minSdkVersion versions.minSdk
@@ -275,12 +277,16 @@ dependencies {
     androidTestImplementation "androidx.room:room-testing:${versions.room}"
 
     // Local unit tests
-    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation 'org.mockito:mockito-core:2.18.0'
+    androidTestImplementation 'org.mockito:mockito-android:2.28.2'
     testImplementation "androidx.annotation:annotation:${versions.annotation}"
     testImplementation("com.google.truth:truth:${versions.truth}") {
         exclude group: 'org.checkerframework' // from guava, not needed at runtime
         exclude group: 'com.google.errorprone' // from guava, not needed at runtime
     }
+    
+
 
 }
 
