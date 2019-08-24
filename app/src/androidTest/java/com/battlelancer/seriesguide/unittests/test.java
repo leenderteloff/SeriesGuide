@@ -1,7 +1,20 @@
 package com.battlelancer.seriesguide.unittests;
 
+import android.content.Context;
+import android.os.RecoverySystem;
+import android.util.StatsLog;
+import android.widget.ProgressBar;
+import androidx.test.platform.app.InstrumentationRegistry;
+import com.battlelancer.seriesguide.dataliberation.model.List;
+import com.battlelancer.seriesguide.ui.ListsActivity;
+import com.battlelancer.seriesguide.ui.lists.ListsTools;
 import com.battlelancer.seriesguide.ui.movies.MovieDetails;
 import com.battlelancer.seriesguide.ui.search.SearchResult;
+import com.battlelancer.seriesguide.ui.stats.StatsFragment;
+import com.battlelancer.seriesguide.ui.stats.StatsViewModel;
+import com.uwetrottmann.seriesguide.backend.lists.Lists;
+import com.uwetrottmann.thetvdb.entities.Series;
+import io.opencensus.stats.Stats;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,21 +37,58 @@ public class test {
 
     MovieDetails movieDetails;
     SearchResult searchResult;
+    ProgressBar progressBar;
+    StatsFragment statsFragment;
+    List list;
+    ListsTools listsTools;
 
+//    @Test
+//    public void setSeries(){
+//
+//
+//
+//        list = new List();
+//        list.name = "String";
+//
+//
+//    }
+
+//    @Test
+//    public void getProgressBar() {
+//
+//        statsFragment = new StatsFragment();
+//        statsFragment.progressBarMoviesWatched.setMin(0);
+//        statsFragment.progressBarMoviesWatched.setMax(5);
+//
+//
+//        Assert.assertNotNull(statsFragment.progressBarMoviesWatched.getMax());
+//
+//
+//    }
 
     @Before
     public void setup(){
         searchResult = new SearchResult();
         searchResult.setTitle("Avengers");
         searchResult.setLanguage("English");
+
     }
 
 
 
+
     @Test
-    public void  setSearchResult(){
+    public void  findMovie(){
+        //Arrange: creating a searchResult object that is used to search for movies
+        searchResult = new SearchResult();
+
+        //Act: giving the search result a title and language
+        searchResult.setTitle("Avengers");
+        searchResult.setLanguage("English");
+
+        //Assert: checking if the searchResult object is created with the right parameters
         Assert.assertEquals(searchResult.getTitle(), "Avengers");
-        Assert.assertEquals(searchResult.getLanguage(), "English");
+        Assert.assertEquals(searchResult.getLanguage(), "Englishh");
     }
 
 
@@ -47,14 +97,14 @@ public class test {
         movieDetails = new MovieDetails();
         movieDetails.setUserRating(1);
 
-        Assert.assertEquals(movieDetails.getUserRating(), 1);
+        Assert.assertEquals(movieDetails.getUserRating(), 3);
     }
 
     @Test
     public void setMovieWatched(){
         movieDetails = new MovieDetails();
         movieDetails.setWatched(true);
-        movieDetails.isWatched();
+       // movieDetails.isWatched();
 
         Assert.assertTrue(movieDetails.isWatched());
     }
@@ -72,8 +122,20 @@ public class test {
     public void setMovieInWatchlist(){
         movieDetails = new MovieDetails();
         movieDetails.setInWatchlist(true);
-        movieDetails.isInWatchlist();
         Assert.assertTrue(movieDetails.isInWatchlist());
+    }
+
+    @Test
+    public void getMovieDetails(){
+        //Arrange: creating a new searchResult object
+        searchResult = new SearchResult();
+
+        //Act: Giving the searchResult a title and a description
+        searchResult.setTitle("Avengers");
+        searchResult.setOverview("Avengers is about super heroes and aliens!");
+
+        //Assert: checking if the Overview is not null, this should be true because we gave it a description
+        Assert.assertNotNull(searchResult.getOverview());
     }
 
 }
