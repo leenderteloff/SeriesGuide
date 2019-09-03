@@ -84,6 +84,8 @@ android {
         // for CI server: log reports (report files are not public)
         textReport true
         textOutput 'stdout'
+        abortOnError false
+
     }
 
     packagingOptions {
@@ -267,6 +269,10 @@ dependencies {
     androidTestImplementation ('androidx.test.ext:truth:1.1.0') {
         exclude group: 'com.google.truth' // include manually to control conflicting deps
     }
+    //Mockito
+    androidTestImplementation 'org.mockito:mockito-core:2.18.0'
+    androidTestImplementation 'junit:junit:4.12'
+
     androidTestImplementation ("com.google.truth:truth:${versions.truth}") {
         exclude group: 'org.checkerframework' // from guava, not needed at runtime
         exclude group: 'com.google.errorprone' // from guava, not needed at runtime
