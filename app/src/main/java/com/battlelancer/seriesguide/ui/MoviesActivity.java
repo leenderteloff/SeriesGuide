@@ -1,31 +1,31 @@
-//package com.battlelancer.seriesguide.ui;
-//
-//import android.content.Intent;
-//import android.os.Bundle;
-//import android.preference.PreferenceManager;
-//import android.view.Menu;
-//import android.view.MenuItem;
-//import android.view.View;
-//import androidx.viewpager.widget.ViewPager;
-//import butterknife.BindView;
-//import butterknife.ButterKnife;
-//import com.battlelancer.seriesguide.R;
-//import com.battlelancer.seriesguide.adapters.TabStripAdapter;
-//import com.battlelancer.seriesguide.settings.DisplaySettings;
-//import com.battlelancer.seriesguide.traktapi.TraktCredentials;
-//import com.battlelancer.seriesguide.ui.movies.MoviesCollectionFragment;
-//import com.battlelancer.seriesguide.ui.movies.MoviesDiscoverFragment;
-//import com.battlelancer.seriesguide.ui.movies.MoviesNowFragment;
-//import com.battlelancer.seriesguide.ui.movies.MoviesSearchActivity;
-//import com.battlelancer.seriesguide.ui.movies.MoviesWatchListFragment;
-//import com.battlelancer.seriesguide.ui.movies.MoviesWatchedFragment;
-//import com.uwetrottmann.seriesguide.widgets.SlidingTabLayout;
-//import org.greenrobot.eventbus.EventBus;
-//
-///**
-// * Movie section of the app, displays various movie tabs.
-// */
-//public class MoviesActivity extends BaseTopActivity {
+package com.battlelancer.seriesguide.ui;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import androidx.viewpager.widget.ViewPager;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import com.battlelancer.seriesguide.R;
+import com.battlelancer.seriesguide.adapters.TabStripAdapter;
+import com.battlelancer.seriesguide.settings.DisplaySettings;
+import com.battlelancer.seriesguide.traktapi.TraktCredentials;
+import com.battlelancer.seriesguide.ui.movies.MoviesCollectionFragment;
+import com.battlelancer.seriesguide.ui.movies.MoviesDiscoverFragment;
+import com.battlelancer.seriesguide.ui.movies.MoviesNowFragment;
+import com.battlelancer.seriesguide.ui.movies.MoviesSearchActivity;
+import com.battlelancer.seriesguide.ui.movies.MoviesWatchListFragment;
+import com.battlelancer.seriesguide.ui.movies.MoviesWatchedFragment;
+import com.uwetrottmann.seriesguide.widgets.SlidingTabLayout;
+import org.greenrobot.eventbus.EventBus;
+
+/**
+ * Movie section of the app, displays various movie tabs.
+ */
+public class MoviesActivity extends BaseTopActivity {
 //
 //    public class MoviesTabClickEvent {
 //        public final int position;
